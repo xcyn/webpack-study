@@ -13,6 +13,7 @@
     npx webpack index.js
   ```
   + 可以把如下代码打包成浏览器能够解析的代码。
+------
 ### 什么是模块打包工具？
   + webpack支持的模块：esMoudle、common.js、CMD、AMD
   ```
@@ -46,6 +47,7 @@
       CMD在加载完成定义（define）好的模块，仅仅是下载不执行，在遇到require才会执行对应的模块。（按需加载）
       AMD用户体验好，因为没有延迟，CMD性能好，因为只有用户需要的时候才执行。
   + webpack 最开始为js模块打包工具，后来随着发展webpack已经支持css、png/jpg....
+------
 ### webpack的正确安装方式
   + [node安装](http://nodejs.cn/download "node安装")
   ```
@@ -58,6 +60,7 @@
     npm info webpack 查看所有webpack版本
     npm webpack@4.2.1 安装webpack指定的4.2.1的版本
   ```
+------
 ### webpack的配置文件
   + 创建webpack.config.js, 配置一个最基本的配置.
   ```
@@ -73,3 +76,114 @@
       }
     }
   ```
+------
+### 什么是loader?
+  + 其实就是一个打包方案。它知道对于某些特定的文件知道怎么打包。而本身webpack并不知道对于这些文件应该怎么处理。
+  + 打包图片配置。
+  ```
+    const jpgFile = require('img.jpg')
+    moudle.export = {
+      entry,
+      output,
+      module: {
+        rules: [{
+          test: '/\.jpg$/',
+          use: {
+            loader: 'file-loader'，
+            options: {
+              name: '[name][hash].[ext]'
+            }
+          }
+        }]
+      }
+    }
+    webpack在打包的时候如果遇到js的时候，webpack可以识别js打包。如果遇到jpg文件时候，把jpg打包交给file-loader去处理。
+    file-loader做了什么呢？ 1.当filer-loader发现文件里引入了jpg文件，它会把文件移动到dist目录下，改一个名字，之后返回
+    图片相对dist目录的地址。 然后把返回的地址，赋值给jpgFile变量。
+  ```
+------
+### 使用loader打包静态资源-图片
+  + 常用的loader打包配置
+  ```
+    moudle.export = {
+      entry,
+      output,
+      module: {
+        rules: [{
+          test: '/\.(jpg|png|gif)$/',
+          use: {
+            loader: 'file-loader'，
+            options: {
+              name: '[name][hash].[ext]',
+              outputPath: 'images/'
+            }
+          }
+        }]
+      }
+    }
+    [hash]代表输出添加hash、[ext]输出文件尾缀。
+    outputPath可以在打包目录下生成images、里面放入打包的图片资源。
+  ```
+  + file-loader 可以 替换成 url-loader, url-loader作用是？
+  相当于把图片生成base64字符串放在了打包的js中。 使用场景，是打包1-2kb的适合url-loader，可以减少一次http请求。
+  ```
+    rules: [{
+      test: '/\.(jpg|png|gif)$/',
+      use: {
+        loader: 'url-loader'，
+        options: {
+          name: '[name][hash].[ext]',
+          outputPath: 'images/',
+          limit: 2048
+        }
+      }
+    }]
+    limit限制小于1kb的就打成js。
+  ```
+------
+### 使用loader打包静态资源-样式
+  + 一般打包css使用两个loader、 style-loader和css-loader，基本配置如下:
+  ```
+    import css from './index.css'
+    rules: [{
+      test: '/\.css$/',
+      use: ['style-loader','css-loader']
+    }]
+    style-loader的作用:
+    把打包后的css文件挂载到head标签中。
+    css-loader的作用：
+    把所有css及上下文的css依赖整合成一个css。
+  ```
+  + 如果使用了css预处理器的打包配置如下:
+  ```
+    import css from './index.scss'
+    rules: [{
+      test: '/\.scss$/',
+      use: ['style-loader','css-loader', 'scss-loader']
+    }]
+    npm install sass-loader node-sass webpack --save-dev sass 依赖 node-sass
+    scss-loader的作用:
+    把sass语法还原成css语法
+  ```
+  + loader的的执行顺序怎么样的？
+    + 从下到上、从右到左
+  + 如何处理css3的兼容前缀呢？
+    + posscss-loader驾到，安装
+    ```
+      npm i -D postcss-loader
+      rules: [{
+        test: '/\.scss$/',
+        use: ['style-loader','css-loader', 'scss-loader', 'postcss-loader']
+      }]
+    ```
+    + 项目根目录下创建postcss.config.js
+    ```
+      npm i -D autoprefix
+      module.exports = {
+        require('autoprefixer')
+      }
+    ```
+    
+
+
+
