@@ -183,7 +183,34 @@
         require('autoprefixer')
       }
     ```
-    
+  + css-loader配置高级用法
+   + 场景分析：存在index.scss中通过 @import 引入 common.scss， 如果直接通过上面的配置，那么common.scss就
+     不会再走 postcss-loader 和 scss-loader。 解决方案如下：
+    ```
+      npm i -D postcss-loader
+      rules: [{
+        test: '/\.scss$/',
+        use: ['style-loader', {
+          loader: 'css-loader',
+          options: {
+            importLoaders: 2, // 解决上述问题，表示如果遇到scss中import scss文件，则重新走下方loader
+            modules: true
+          }
+        }, 'scss-loader', 'postcss-loader']
+      }]
+    ```
+-----
+### 使用loader打包静态资源-字体文件
+  ```
+    rules: [{
+      test: '/\.(eot|ttf|svg)$/',
+      use: {
+        loader: 'file-loader'
+      }
+    }]
+  ```
+
+
 
 
 
