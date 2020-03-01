@@ -165,7 +165,7 @@
     scss-loader的作用:
     把sass语法还原成css语法
   ```
-  + loader的的执行顺序怎么样的？
+  + loader的执行顺序怎么样的？
     + 从下到上、从右到左
   + 如何处理css3的兼容前缀呢？
     + posscss-loader驾到，安装
@@ -208,6 +208,38 @@
         loader: 'file-loader'
       }
     }]
+  ```
+---
+### 什么是plugin?
+  + 定义: plugin可以在webpack运行到某个时候的时候帮你做一些事情。
+  + 常用plugin及功能：
+    + HtmlWebpackPlugin: 自动在打包目录下生成index.html, 并把打包的js引入到index.html中
+    ```
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: 模版html
+      })
+    ]
+    ```
+    + clean-webpack-plugin: 打包之前可以删除某个文件
+    ```
+    plugins: [
+     new CleanWebpackPlugin(['dist']）
+    ]
+    ```
+### entry 和 output的配置
+  ```
+    moudle.export = {
+      entry: {
+        main: './index.js',
+        main2: './index.js'
+      },
+      output: {
+        publicPath: 'http:www.cnd.cn',
+        fliename: '[name].js', // 占位符name代表自动取entry配置的key值
+        path: path.resolve(__dirname, 'dist')
+      }
+    }
   ```
 
 
