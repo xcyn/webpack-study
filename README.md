@@ -227,6 +227,7 @@
      new CleanWebpackPlugin(['dist']）
     ]
     ```
+---
 ### entry 和 output的配置
   ```
     moudle.export = {
@@ -241,6 +242,78 @@
       }
     }
   ```
+---
+### sourceMap配置
+  + 什么是sourceMap?
+    + sourceMap为一个映射关系，可以映射打包后的文件代码和源代码中的代码。
+    ```
+    moudle.export = {
+      devtool: 'source-map'
+    }
+    inline-source-map: 会打包到js文件中，底部注释中
+    cheap-source-map: 当我们代码量很大，代码出错， source-map会告诉你哪行哪列出错，而cheap-source-map只能知道行，性能会加速
+    moudle-source-map: moudle能关联到第三方包里的错误。
+    eval: 性能最好
+    cheap-module-eval-source-map: 开发环境推荐配置
+    cheap-moudle-souce-map: 线上如果出问题，推荐配置
+    ```
+---
+### webpackDevServe
+  + 主要用于起node服务让项目做热加载更新
+    + 原始的方式可以通过在package.json 的 script 下添加 --watch属性做监听，只有webpack打包的文件发生变化就自动打包，但是需要重新刷新浏览器。
+    + devServer可以解决自动刷新浏览器，并且通过参数能自动打开浏览器
+    ```
+      moudle.export = {
+        devServe: {
+          contentBase: '本地服务器路径 -> dist目录',
+          open: true, // 自动打开浏览器
+          proxy: {}, // 接口代理
+        }
+      }
+    ```
+    + 模拟devServer功能
+    ```
+    const express = require('express');
+    const webpack = require('webpack');
+    const webpackDevMiddleware = require('webpack-dev-middleware'); // 监听文件改变重新执行
+    const config = require('./webpack.config.js');
+    <!-- node中使用webpack返回编译器 -->
+    const complier = webpack(config); // 编译器，相当于执行一直编译器就自动打包一次代码
+    const app = express();
+    app.use(webpackDevMiddleware(complier, {
+      publicPath: config.output.publishPath
+    }));
+    app.listen(3000, () => {
+      console.log('serve is running')
+    })
+    ```
+    + 热模块更新hmr (及改了css的文件，只更新css的文件更新，只改了js的文件，只更新js的文件更新)
+    ```
+      moudle.export = {
+        devServe: {
+          hot: true, // 热加载生效
+          hotOnly: true //即使热加载不生效，浏览器也不刷新
+        }
+      }
+    ```
+    + 同时配置插件 hotMoudleReplacementPlugin
+    ```
+      plugins:[
+        new webpack.hotMoudleReplacementPlugin()
+      ]
+    ```
+    + 如果引入一些比较偏的文件，可能需要编写hmr代码，如下：
+    ```
+      import moudleFile from './moudleFile'
+      if(module.hot) {
+        module.hot.accept('./moudleFile', () => {
+          moudleFile()
+        })
+      }
+    ```
+---
+
+
 
 
 
