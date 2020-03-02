@@ -312,6 +312,67 @@
       }
     ```
 ---
+### babel处理es6
+  + babel-loader用于处理es6语法
+  ```
+    npm install --save-dev babel-loader @babel/core @babel/preset-env @babel/polyfill
+    @babel/core babel的核心模块
+    @babel/preset-env 中包含了所有es6转es5的翻译规则
+    @babel/polyfill 用于es6语法转换es5语法（兼容低版本兼容）
+    rules: [
+      {
+        test: /\.js$/
+        exclude: /node_moudules/,
+        loader: "babel-loader",
+        options: {
+          preset: [['@babel/preset-env', {
+            useBuiltIns: "usage" // 当做preset-env做版本填充时， 根据业务代码情况来动态填充。（按需引入）
+          }]]
+        }
+      }
+    ]
+  ```
+  + babel配置第三方库（比如说你写了一个第三方组件库）
+  ```
+  npm install --save @babel/plugin-transform-runtime // 通过此插件不污染全局环境，通过必包的形式注入es6转换代码
+  npm install --save @babel/runtime-corejs2
+  rules: [
+    {
+      test: /\.js$/
+      exclude: /node_moudules/,
+      loader: "babel-loader",
+      options: {
+        "plugins": ["@babel/plugin-transform-runtime", {
+          "core.js": false,
+          "helpers": true,
+          "regenerator": true,
+          "useESModules": false
+        }]
+      }
+    }
+  ]
+  options中的内容也可以放在根目录下的.babelrc文件下，效果是相同的。
+  ```
+  + babel配置react关键配置
+  ```
+  npm install --save-dev @babel/preset-react
+  rules: [
+    {
+      test: /\.js$/
+      exclude: /node_moudules/,
+      loader: "babel-loader",
+      options: {
+        preset: [
+        [
+          '@babel/preset-env', {
+            useBuiltIns: "usage" // 当做preset-env做版本填充时， 根据业务代码情况来动态填充。（按需引入）
+        }]
+        "@babel/preset-react"
+      }
+    }
+  ]
+  babel配置执行顺序从下往上从右往左
+  ```
 
 
 
