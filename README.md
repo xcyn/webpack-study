@@ -1,4 +1,7 @@
 # webpack学习整理
+### 实战配置总结
+  + [第三方库打包](./Library.md "第三方库打包")
+---
 ### 什么是webpack？
   + 定义: webpack是一个模块打包工具。
   + 打个比方，对esMoudle的处理.
@@ -486,6 +489,7 @@
     + preloading 和依赖文件一起加载（不推荐）
     + import(/* preloading: true */， './a.js')
   + 重点在做前端优化的时候，缓存并不是最重要的点，最重要的点其实是代码覆盖率。
+---
 ### webpack css代码分割
   + MiniCssExtractPlugin -> mini-css-extract-plugin
   ```
@@ -532,6 +536,7 @@
     }
   }
   ```
+---
 ### webpack shimming的使用（垫片）
   + 自动给模块注入相关依赖模块
   ```
