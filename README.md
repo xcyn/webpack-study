@@ -522,6 +522,50 @@
     "build": "webpack --env.production --config ./build/webpack.prod.js"
   }
   ```
+### webpack与浏览器缓存
+  + 通过在output配置占位符[contenthash]，每次内容改变，会重新生成hash处理缓存。
+  + 老版本webapck需要配置：
+  ```
+  optimization: {
+    runtimeChunk: {
+      name: 'runtime' // 会把业务代码和第三方库的代码交互的代码做抽离，生成一个runtime.js
+    }
+  }
+  ```
+### webpack shimming的使用（垫片）
+  + 自动给模块注入相关依赖模块
+  ```
+  const webpack = require('webpack');
+  new webpack.ProvidePlugin({
+    $: 'jquery'
+  })
+  ```
+  + 别名形式
+  ```
+  const webpack = require('webpack');
+  new webpack.ProvidePlugin({
+    $: 'jquery',
+    _join: ['loash', 'join']
+  })
+  ```
+  + 配置多个loader配置
+  ```
+  moudle: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: [
+          {
+            loader: 'babel-loader'
+          },
+          {
+            loader: 'imports-loader?this=>window' // 可以把模块中的this指向window
+          },
+        ]
+      }
+    ]
+  }
+  ```
 
 
   
