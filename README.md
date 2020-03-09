@@ -2,6 +2,7 @@
 ### 实战配置总结
   + [第三方库打包](./Library.md "第三方库打包")
   + [PWA配置](./PWA.md "PWA配置")
+  + [TypeScript配置](./TS.md "TypeScript配置")
 ---
 ### 什么是webpack？
   + 定义: webpack是一个模块打包工具。

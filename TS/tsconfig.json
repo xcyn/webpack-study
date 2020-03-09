@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "outDir": "dist", // 输出目录，写不写都行
+    "module": "es6", // 可以使用esMoudle引用形式
+    "target": "es5", // 打包ts语法，最终转换成es5语法
+    "allowJs": true //运行在ts里引入js文件
+  }
+}
