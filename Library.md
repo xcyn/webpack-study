@@ -1,5 +1,5 @@
 # 第三方库打包
-  + Library项目为demo项目
+  + Library项目为demo项目 [第三方库打包](./Library/webpack.library.js "第三方库打包")
   + 关键配置
   ```
   const path = require('path');
