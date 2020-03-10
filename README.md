@@ -272,7 +272,33 @@
         devServe: {
           contentBase: '本地服务器路径 -> dist目录',
           open: true, // 自动打开浏览器
-          proxy: {}, // 接口代理
+          index: '', // 如果想代理根路径,需要配置这个参数"/"
+          proxy: {
+            "react": {
+              target: "http://localhost:8081",
+              secure: false, // 如果转发的是https需要配置这个参数
+              pathRewrite: {
+                "header.json": "demo.js" // 假设本地服务是http://localhost:8080,请求的接口是：http://localhost:8080/react/api/header.json -> http://localhost:8081/react/api/demo.json
+              },
+              headers: {
+                host: 'www.dell-le.con', // 可以模拟host
+                cookie: 'zybBussXXX' // 模拟cookie
+              },
+              historyApiFallback: true, // 原理是对路径的请求都转为对跟路径的请求
+              historyApiFallback: { // 等价与上面，无论访问什么路径都访问index.htnl
+                rewrites: [{
+                  from: /\.\/,
+                  to: '/index.html'
+                }]
+              }, // 等价于上面写法
+              changeOrigin: true, //突破origin限制
+              bypass: function(req, res, proxyOptions) { //相当于代理的filter， 当前例子为，如果请求的是html就直接返回了。
+                if(res.header.accept.indexOf('html') !== -1) {
+                  retrun false
+                }
+              }
+            }
+          }, // 接口代理
         }
       }
     ```
@@ -573,6 +599,25 @@
     ]
   }
   ```
+### webpack 配置eslint
+  + 核心配置如下，先安装 npm install eslint --save-dev， 通过命令npx eslint --init生成eslint配置文件.eslintrc.js
+  ```
+  module.exports = {
+    root: true,
+    env: {
+      node: true
+    },
+    extends: ["plugin:vue/essential", "@vue/prettier"], // 走那种规范
+    rules: {
+      "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
+      "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off"
+    },
+    parserOptions: {
+      parser: "babel-eslint"
+    }
+  };
+  ```
+  + [vscode配置eslint自动eslint对其] (https://blog.csdn.net/hdchangchang/article/details/82233740 "vscode配置eslint自动eslint对其")
 
 
   
