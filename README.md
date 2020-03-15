@@ -3,6 +3,7 @@
   + [第三方库打包](./Library.md "第三方库打包")
   + [PWA配置](./PWA.md "PWA配置")
   + [TypeScript配置](./TS.md "TypeScript配置")
+  + [多页打包配置](./PAGES.md "多页打包配置")
 ---
 ### 什么是webpack？
   + 定义: webpack是一个模块打包工具。
@@ -618,6 +619,34 @@
   };
   ```
   + [vscode配置eslint自动eslint对其] (https://blog.csdn.net/hdchangchang/article/details/82233740 "vscode配置eslint自动eslint对其")
+### webpack性能优化
+  + 1、跟上技术迭代 (提升Node、npm、yarn的版本)
+  + 2、在尽可能少的模块 （合理使用exclude和include，让loader作用返回缩小）
+  + 3、plugin尽可能精简并确保可靠
+  + 4、resolve参数合理配置：
+    ```
+    {
+      reslove: {
+        extensions: ['.js', '.jsx'] // 不用写后缀了
+      }
+    }
+    ```
+  + 5、webpack.DllPlugin 插件优化。
+    + 通过把第三方包打成一个库，然后通过dllPlugin分析成mainfest.json文件
+    ```
+    add-asset-html-webpack-plugin --save // 通过此插件可以往html中添加(挂载)某个js
+    plugins: {
+      new AddAssetHtmlWebpackPlugin({
+        filePath: path.resolve(__dirname, '../dll/vendor.dll.js')
+      })
+      new webpack.DllReferencePlugin({
+        mainfest: path.resolve(__dirname, '../dll/vendor.mainfest.json')
+      })
+    }
+    ```
+  + 6、启用happypack多进程打包，parallel-webpack多页打包（适合多页）
+  + 7、合理使用sourceMap, sourceMap越详细，打包速度越快。
+  + 8、结合stats分析打包结果
 
 
   

@@ -14,7 +14,7 @@
     module: {
       rules: [
         {
-          test: /\.tsx?$/,
+          test: /\.tsx?$/, // 代表js和jsx都走ts-loader
           use: 'ts-loader',
           exclude: /node_modules/
         },
