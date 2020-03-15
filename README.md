@@ -5,6 +5,7 @@
   + [TypeScript配置](./TS.md "TypeScript配置")
   + [多页打包配置](./PAGES.md "多页打包配置")
   + [自己写一个loader](./myLoader/index.js "自己写一个loader")
+  + [自己写一个plugin](./myPlugin/index.js "自己写一个plugin")
 ---
 ### 什么是webpack？
   + 定义: webpack是一个模块打包工具。
