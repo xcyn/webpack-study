@@ -4,6 +4,7 @@
   + [PWA配置](./PWA.md "PWA配置")
   + [TypeScript配置](./TS.md "TypeScript配置")
   + [多页打包配置](./PAGES.md "多页打包配置")
+  + [自己写一个loader](./myLoader/index.js "自己写一个loader")
 ---
 ### 什么是webpack？
   + 定义: webpack是一个模块打包工具。
