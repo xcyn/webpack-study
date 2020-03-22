@@ -7,6 +7,7 @@ const moudle2Print = function (print='') {
   }
   console.log('我是模块2中的moudle2Print')
   moudle3Print('我是模块2中的moudle3Print')
+  document.write('我是模块2: 测试自写的loader: xcy2<br/>')
 }
 module.exports = {
   moudle2Print

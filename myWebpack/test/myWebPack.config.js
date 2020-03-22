@@ -1,4 +1,5 @@
-const path = require('path');
+const path = require('path')
+const myPlugin = require('./plugin/myPlugin')
 
 module.exports = {
   baseDir: path.resolve(__dirname),
@@ -32,5 +33,8 @@ module.exports = {
   output: {
     fliename: 'myWebpack.js',
     path: path.resolve(__dirname, 'dist')
-  }
+  },
+  plugins: [
+    new myPlugin()
+  ]
 }

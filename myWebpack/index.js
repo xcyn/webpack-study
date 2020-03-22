@@ -1,21 +1,34 @@
+const { SyncHook } = require('tapable');
 const path = require('path')
 const fs = require('fs')
 const shell = require('shelljs')
 const parser = require('@babel/parser')
 const traverse = require('@babel/traverse').default
 const babel = require('@babel/core')
-const { entry, output, baseDir, template, modules = {} }  = require('./test/myWebPack.config.js')
+const { entry, output, baseDir, template, modules = {}, plugins = [] }  = require('./test/myWebPack.config.js')
 const complier = {
+  compilation: {
+    name: 'compilation',
+    complier: this
+  },
   modules,
+  plugins,
   // 映射表
   moduleFileMap: {},
+  hooks: {
+    initPlugin: new SyncHook(),
+    emit: new SyncHook(["compilation"])
+  },
   // 用于入口读取
   run:  function () {
+    this.initPlugin()
+    this.hooks.initPlugin.call()
     let moduleFile = this.build(entry)
     const entryRpath = `.${entry.slice(baseDir.length)}`
     this.moduleFileMap[entryRpath] = moduleFile
     this.resolveDependences(moduleFile)
     this.file(entryRpath, this.moduleFileMap)
+    this.hooks.emit.call(this.compilation)
   },
   // 用于js代码解析
   build: function( entry ) {
@@ -123,6 +136,13 @@ const complier = {
       }
     }
     return content
+  },
+  // plugin执行
+  initPlugin: function () {
+    for (let index = 0; index < plugins.length; index++) {
+      const plugin = plugins[index]
+      plugin.apply(this)
+    }
   }
 }
 complier.run()
