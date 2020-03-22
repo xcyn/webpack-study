@@ -4,8 +4,9 @@ const shell = require('shelljs')
 const parser = require('@babel/parser')
 const traverse = require('@babel/traverse').default
 const babel = require('@babel/core')
-const { entry, output, baseDir, template }  = require('./test/myWebPack.config.js')
+const { entry, output, baseDir, template, modules = {} }  = require('./test/myWebPack.config.js')
 const complier = {
+  modules,
   // 映射表
   moduleFileMap: {},
   // 用于入口读取
@@ -101,7 +102,26 @@ const complier = {
   },
   // 获取文件内容
   getSource: function (moudle) {
-    const content = fs.readFileSync(moudle, 'utf8')
+    let content = fs.readFileSync(moudle, 'utf8')
+    content = this.resolveLoaders(moudle, content)
+    return content
+  },
+  // loader功能补全
+  resolveLoaders: function (moudle, content) {
+    const rules = modules.rules || []
+    for (let index = 0; index < rules.length; index++) {
+      const loader = rules[index]
+      let test = loader.test
+      if(test.test(moudle)) {
+        let use = loader.use || []
+        for (let key = 0; key < use.length; key++) {
+          const loaderIns = use[key];
+          const options = loaderIns.options
+          const loaderFn = require(loaderIns.loader)
+          content = loaderFn.call(this, content, options)
+        }
+      }
+    }
     return content
   }
 }
