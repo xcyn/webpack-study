@@ -6,4 +6,5 @@ TS/node_modules
 PAGES/node_modules
 myLoader/node_modules
 myPlugin/node_modules
+myWebpack/node_modules
 .vscode/
